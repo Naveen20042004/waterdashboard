@@ -1,16 +1,17 @@
 ﻿'use client';
 import React, { useState } from 'react';
+import Image from 'next/image'; // Added this back for your original logo
 
 export default function Dashboard() {
-    // State variables for flows (ready to be connected to your AWS backend)
-    const [mainInletFlow, setMainInletFlow] = useState(32); // e.g., Total flow from pump
-    const [bottlingFlow, setBottlingFlow] = useState(10); // L/min
-    const [dairyFlow, setDairyFlow] = useState(20); // L/min
+    // State variables for flows
+    const [mainInletFlow, setMainInletFlow] = useState(32);
+    const [bottlingFlow, setBottlingFlow] = useState(10);
+    const [dairyFlow, setDairyFlow] = useState(20);
 
     // Mass Balance Leakage Calculation
     const totalConsumption = bottlingFlow + dairyFlow;
     const deltaV = mainInletFlow - totalConsumption;
-    const leakThreshold = 1.5; // L/min variance allowed before triggering alert
+    const leakThreshold = 1.5;
     const isLeaking = deltaV > leakThreshold;
 
     return (
@@ -18,11 +19,19 @@ export default function Dashboard() {
             {/* Header */}
             <header className="flex justify-between items-center mb-8 bg-white p-4 rounded-lg shadow-sm">
                 <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
-                        💧
+                    {/* RESTORED ORIGINAL LOGO */}
+                    <div className="w-12 h-12 relative overflow-hidden rounded-full">
+                        <Image
+                            src="/logo.jpeg"
+                            alt="Water Management Logo"
+                            fill
+                            style={{ objectFit: 'cover' }}
+                            sizes="48px"
+                        />
                     </div>
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900">Intelligent Water Management</h1>
+                        {/* REMOVED THE WORD "INTELLIGENT" */}
+                        <h1 className="text-2xl font-bold text-gray-900">Water Management</h1>
                         <p className="text-sm text-gray-500">Industrial MVP Dashboard | Bottling & Dairy Operations</p>
                     </div>
                 </div>
@@ -32,19 +41,19 @@ export default function Dashboard() {
                 </div>
             </header>
 
-            {/* LEAKAGE DETECTION BANNER (NEW) */}
+            {/* LEAKAGE DETECTION BANNER */}
             <div className={`mb-8 p-4 rounded-lg shadow-md border-l-8 flex items-center justify-between ${isLeaking ? 'bg-red-50 border-red-600' : 'bg-green-50 border-green-500'}`}>
                 <div>
                     <h2 className={`text-lg font-bold ${isLeaking ? 'text-red-800' : 'text-green-800'}`}>
                         {isLeaking ? '⚠️ CRITICAL: PIPELINE LEAK DETECTED' : '✅ SYSTEM NORMAL: NO LEAKS'}
                     </h2>
                     <p className="text-sm text-gray-600 mt-1">
-                        <strong>Mass Balance ($\Delta V$):</strong> {deltaV.toFixed(2)} L/min variance detected.
+                        <strong>Mass Balance (ΔV):</strong> {deltaV.toFixed(2)} L/min variance detected.
                     </p>
                 </div>
                 <div className="text-right">
-                    <p className="text-sm">Main Supply: {mainInletFlow} L/min</p>
-                    <p className="text-sm">Total Consumption: {totalConsumption} L/min</p>
+                    <p className="text-sm font-medium">Main Supply: {mainInletFlow} L/min</p>
+                    <p className="text-sm font-medium">Total Consumption: {totalConsumption} L/min</p>
                 </div>
             </div>
 
